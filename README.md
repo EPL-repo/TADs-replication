@@ -8,11 +8,11 @@
 
 > Directory details
 
-- [CSV_files](#CSVfiles)
+- [CSV_files](#CSV_files)
 - [REPLIseq](#REPLIseq)
-- [SNSseq_origins](#SNSseq)
-- [Average_plots_matrices](#matrices)
-- [Permutations_tests](#permutations)
+- [SNSseq_origins](#SNSseq_origins)
+- [Average_plots_matrices](#Average_plots_matrices)
+- [Permutations_tests](#Permutations_tests)
 
 ---
 
@@ -56,7 +56,7 @@ Variables include (detailed in the plot_sigma_values_v1.pl Perl script):\
 11 = $adjbin:                       number of sequences per bin, adjusted for all sequencing biases (using $adjust)\
 12 = $adjbin_mb:                    number of sequences per bin with background (noise) subtraction, adjusted for all sequencing biases (using $adjust)\
 13 = $adjbin_SD:                    standard deviation of adjbin values\
-14 = $bin:                          number of sequences per bin\
+14 = $bin:                          number of sequences per bin
 
 ---
 
@@ -74,24 +74,24 @@ $ bedtools makewindows -w 10000 -s 10000 -g hg19_sorted.chrom.sizes > hg19_windo
 
 ### Process fastq
 $ for file in *.fastq
-> do
->	INPUT=${file:0:17}
->	### BWA alignment
->	bwa mem -M -t 4 hg19.masked $file > $INPUT.sam
->	### SAM to BAM
->	samtools view -bSq 20 $INPUT.sam > $INPUT.bam
->	### Sort BAM
->	samtools sort -o $INPUT.srt.bam $INPUT.bam
->	### Remove duplicates
->	samtools rmdup -S $INPUT.srt.bam $INPUT.rmdup.bam
->	### BAM to BED
->	bamToBed -i $INPUT.rmdup.bam > $INPUT.bed
->	### Sort BED
->	sort -k1,1 -k2,2n $INPUT.bed > $INPUT.srt.bed
->	### Counts per bin
->	bedtools intersect -sorted -c -b $INPUT.srt.bed -a hg19_windows.bed > $INPUT.windows.bed
->	### Make BEDGRAPH file
->	awk '{printf "%s\t%d\t%d\t%2.3f\n", $1,$2,$3,$4}' $INPUT.windows.bed > $INPUT.bg
+do
+INPUT=${file:0:17}
+### BWA alignment
+bwa mem -M -t 4 hg19.masked $file > $INPUT.sam
+### SAM to BAM
+samtools view -bSq 20 $INPUT.sam > $INPUT.bam
+### Sort BAM
+samtools sort -o $INPUT.srt.bam $INPUT.bam
+### Remove duplicates
+samtools rmdup -S $INPUT.srt.bam $INPUT.rmdup.bam
+### BAM to BED
+bamToBed -i $INPUT.rmdup.bam > $INPUT.bed
+### Sort BED
+sort -k1,1 -k2,2n $INPUT.bed > $INPUT.srt.bed
+### Counts per bin
+bedtools intersect -sorted -c -b $INPUT.srt.bed -a hg19_windows.bed > $INPUT.windows.bed
+### Make BEDGRAPH file
+awk '{printf "%s\t%d\t%d\t%2.3f\n", $1,$2,$3,$4}' $INPUT.windows.bed > $INPUT.bg
 >done
 
 ### Calculate count ratios (Early/Mid/Late), e.g. replicate 1 (rep1) data
