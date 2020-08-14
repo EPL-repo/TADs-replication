@@ -13,12 +13,13 @@
 - [SNSseq_origins](#SNSseq_origins)
 - [Average_plots_matrices](#Average_plots_matrices)
 - [Permutations_tests](#Permutations_tests)
+- [Perl_scripts_Macheret-Halazonetis_2018](#Perl_scripts_Macheret-Halazonetis_2018)
 
 ---
 
 ## CSV_files
 
-- These are the EdUseq-HU analysis outputs, files prepared using bwa-mem and the Perl scripts in the directory Perl_scripts_Macheret-Halazonetis_2018/
+- These are the EdUseq-HU analysis outputs, files prepared using bwa-mem and the Perl scripts in the directory [Perl_scripts_Macheret-Halazonetis_2018](Perl_scripts_Macheret-Halazonetis_2018/)
 - Raw sequencing data can be found [here](https://www.ncbi.nlm.nih.gov/bioproject/PRJNA397123) for U2OS cells and [here](https://www.ncbi.nlm.nih.gov/geo/query/acc.cgi?acc=GSE153734) for H1299 cells
 - Reads must be aligned to the human **masked** genome (version: GRCh37/hg19), accessed from [here](http://hgdownload.soe.ucsc.edu/goldenPath/hg19/bigZips/)
 
@@ -34,13 +35,15 @@ $ perl calculate_sigma_from_number_hits_per_bin_v1.pl EdUseq_expt_bin-size_10000
 ```
 
 General format of the CSV files:\
-25,000 lines corresponding to each of the 10-Kb (kilobase) bin partitions of a given chromosome\
+Every file contains 25,000 lines corresponding to each of the 10-Kb (kilobase) bin partitions of a given chromosome, as follows:\
 Line 1: nucleotides 1-9,999 = bin: 0;\
 Line 2: nucleotides 10,000-19,999 = bin: 1;\
 [...]\
+Line 25,000: nucleotides 249,990,000-249,999,999 = bin: 25,000\
 Each line contains data for 22 or 23 chromosomes (chr1-22, and depending on the cell line also chrX),\
 and each column contains a variable:\
 chr_1_variable_1, chr_1_variable_2, chr_1_variable_n,,chr_2_variable_1, chr_2_variable_2, chr_2_variable_n,, etc...\
+(note the blank column between chr_i_variable_n and chr_j_variable_1 !)
 \
 Variables include (detailed in the plot_sigma_values_v1.pl Perl script):\
 1 = $sigma_bin_mb_totalSD_sm:       sigma value with background (noise) subtraction, all values smoothened\
@@ -65,17 +68,18 @@ Variables include (detailed in the plot_sigma_values_v1.pl Perl script):\
 - Raw sequencing data can be found [here](https://www.ncbi.nlm.nih.gov/bioproject/PRJNA397123)
 
 The early, mid and late S-phase REPLIseq reads were assigned to 10-Kb genomic bins.\
-The numbers of early, mid and late S-phase reads were compared for each genomic bin: if one fraction (early, mid or late) accounted for more than 50% of the total reads for the bin, then that bin was assigned to the corresponding replication timing domain:
+The numbers of early, mid and late S-phase reads were compared for each genomic bin: if one fraction (E, M or L) accounted for more than 50% of the total reads for the bin, then that bin was assigned to the corresponding replication timing domain.\
+Samples can be processed as in the following example (the hg19.chrom.sizes file can be found in the [REPLIseq](REPLIseq/) folder):
 
 ```shell
 ### Make 10kb windows for count bins
 $ sort -k1,1 -k2,2n hg19.chrom.sizes > hg19_sorted.chrom.sizes
 $ bedtools makewindows -w 10000 -s 10000 -g hg19_sorted.chrom.sizes > hg19_windows.bed
 
-### Process fastq
+### Process fastq (change the size of the input file name as needed)
 $ for file in *.fastq
 do
-INPUT=${file:0:17}
+INPUT=${file:0:15} 
 ### BWA alignment
 bwa mem -M -t 4 hg19.masked $file > $INPUT.sam
 ### SAM to BAM
@@ -94,7 +98,7 @@ bedtools intersect -sorted -c -b $INPUT.srt.bed -a hg19_windows.bed > $INPUT.win
 awk '{printf "%s\t%d\t%d\t%2.3f\n", $1,$2,$3,$4}' $INPUT.windows.bed > $INPUT.bg
 >done
 
-### Calculate count ratios (Early/Mid/Late), e.g. replicate 1 (rep1) data
+### Calculate count ratios (E/M/L), e.g. U2OS replicate 1 (rep1) data
 $ paste U2OS_NE_rep1_E_.bg U2OS_NE_rep1_M_.bg U2OS_NE_rep1_L_.bg | \
 awk '{if($8 != 0 || $4 != 0 || $12 != 0){print $1,$2,$3,$4,$8,$12,$4/($4+$8+$12),$8/($4+$8+$12),$12/($4+$8+$12)}}' \
 OFS='\t' > U2OS_NE_rep1_EML-ratios_.bg
@@ -144,7 +148,7 @@ write.table(tblRT,"U2OS_NE_rep1_RT.txt",sep="\t", quote=F, row.names=F)
 
 ```
 \
-To make Early/Late profiles (using 10kb windows, following Marchal et al. Nature Protocols 2018):
+To make Early/Late profiles (using 10kb windows, following [Marchal *et al*. *Nature Protocols* 2018](https://www.nature.com/articles/nprot.2017.148)):
 ```shell
 for file in *_E_.bg
 do
@@ -163,7 +167,7 @@ echo -e "chr\tstart\tstop\t" ls *_T_.bg | sed 's/\ /\t/g' > merge_RT.txt
 cat *_T_.bg >> merge_RT.txt
 ```
 \
-R (for Loess smoothing and bedgraph file creation)
+R (to perform Loess smoothing and create bedgraph files)
 
 ```{r}
 library(preprocessCore)
@@ -226,14 +230,14 @@ plot(chr1[,4],pch=19,cex=0.2,col="grey",ylim=c(-6,6),ylab="RT",xaxt="n")
 
 - Raw SNSseq data can be found [here](https://www.ncbi.nlm.nih.gov/bioproject/PRJNA163241) for HeLa cells and [here](https://www.ncbi.nlm.nih.gov/bioproject/PRJNA257527) for non-replicating genomic DNA (LexoG0) in MCF7 cells
 
-Peaks were called using the MACS2 *callpeak* function with the following parameters: *--gsize hs --bw 300 --qvalue 0.05 --mfold 5 50* and using LexoG0 uniquely mapped reads (in triplicate) as a control.\
-Only origins detected in both HeLa SNS replicates were retained: see the intersection_HeLa_SNSseq.narrowPeak file.
+Peaks were called using the MACS2 *callpeak* function with the following parameters: *--gsize hs --bw 300 --qvalue 0.05 --mfold 5 50* and using *LexoG0* uniquely mapped reads (in triplicate) as a control.\
+Only origins detected in both HeLa SNS replicates were retained for further analyses: see the [intersection_HeLa_SNSseq.narrowPeak](SNSseq_origins/) file.
 
 ---
 
 ## Average_plots_matrices
 
-Matrices generated using the [deeptools](https://deeptools.readthedocs.io/en/develop/index.html) *computeMatrix* function in the *scale-regions* mode, serving to subsequently create average origin firing plots over TADs.
+Matrices generated using the [deeptools](https://deeptools.readthedocs.io/en/develop/index.html) *computeMatrix* function in *scale-regions* mode, serving to subsequently create average origin firing plots over TADs.
 
 ---
 
@@ -247,4 +251,9 @@ Basic requirements:\
 BSgenome.Hsapiens.UCSC.hg19 (≥v1.4.0)\
 regioneR (≥v1.18.1)
 
+---
 
+## Perl_scripts_Macheret-Halazonetis_2018
+
+Perl scripts published with the first paper describing the EdUseq-HU assay ([Macheret & Halazonetis *Nature* 2018](https://www.nature.com/articles/nature25507)) for sequencing data analysis.\
+For more details, see [Macheret & Halazonetis *Nature* 2018](https://www.nature.com/articles/nature25507) and [Macheret & Halazonetis *Nature Protocols* 2019](https://www.nature.com/articles/s41596-018-0081-y).
