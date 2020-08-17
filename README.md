@@ -35,11 +35,13 @@ $ perl calculate_sigma_from_number_hits_per_bin_v1.pl EdUseq_expt_bin-size_10000
 ```
 
 General format of the CSV files:\
+\
 Every file contains 25,000 lines corresponding to each of the 10-Kb (kilobase) bin partitions of a given chromosome, as follows:\
 Line 1: nucleotides 1-9,999 = bin: 0;\
 Line 2: nucleotides 10,000-19,999 = bin: 1;\
 [...]\
 Line 25,000: nucleotides 249,990,000-249,999,999 = bin: 25,000\
+\
 Each line contains data for 22 or 23 chromosomes (chr1-22, and depending on the cell line also chrX),\
 and each column contains a variable:\
 chr_1_variable_1, chr_1_variable_2, chr_1_variable_n,,chr_2_variable_1, chr_2_variable_2, chr_2_variable_n,, etc...\
@@ -47,9 +49,13 @@ chr_1_variable_1, chr_1_variable_2, chr_1_variable_n,,chr_2_variable_1, chr_2_va
 \
 Variables include (detailed in the plot_sigma_values_v1.pl Perl script):\
 1 = $sigma_bin_mb_totalSD_sm:       sigma value with background (noise) subtraction, all values smoothened\
+\
 2 = $sigma_bin_mb_totalSD_tm:       sigma value with background (noise) subtraction, high values trimmed\
+\
 3 = $sigma_bin_totalSD_sm:          sigma value without background (noise) subtraction, all values smoothened\
+\
 4 = $sigma_bin_totalSD_tm:          sigma value without background (noise) subtraction, high values trimmed\
+\
 5 = $adjust:                        sequence coverage of genomic DNA sequencing (reflecting all sequencing biases)
 
 ---
