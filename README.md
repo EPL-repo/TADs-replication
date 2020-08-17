@@ -50,16 +50,7 @@ Variables include (detailed in the plot_sigma_values_v1.pl Perl script):\
 2 = $sigma_bin_mb_totalSD_tm:       sigma value with background (noise) subtraction, high values trimmed\
 3 = $sigma_bin_totalSD_sm:          sigma value without background (noise) subtraction, all values smoothened\
 4 = $sigma_bin_totalSD_tm:          sigma value without background (noise) subtraction, high values trimmed\
-5 = $adjust:                        sequence coverage of genomic DNA sequencing (reflecting all sequencing biases)\
-6 = $sigma_bin_mb_totalSD:          sigma value with background (noise) subtraction\
-7 = $sigma_bin_totalSD:             sigma value without background (noise) subtraction\
-8 = $sigma_bin_mb_totalSD_log2:     sigma value with background (noise) subtraction, converted to log2\
-9 = $sigma_bin_mb_totalSD_sm_log2:  sigma value with background (noise) subtraction, all values smoothened, converted to log2\
-10 = $sigma_bin_mb_totalSD_tm_log2: sigma value with background (noise) subtraction, high values trimmed, converted to log2\
-11 = $adjbin:                       number of sequences per bin, adjusted for all sequencing biases (using $adjust)\
-12 = $adjbin_mb:                    number of sequences per bin with background (noise) subtraction, adjusted for all sequencing biases (using $adjust)\
-13 = $adjbin_SD:                    standard deviation of adjbin values\
-14 = $bin:                          number of sequences per bin
+5 = $adjust:                        sequence coverage of genomic DNA sequencing (reflecting all sequencing biases)
 
 ---
 
