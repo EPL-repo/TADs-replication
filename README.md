@@ -1,6 +1,6 @@
 # TADs-replication
 
-> Data for Puig Lombardi & Tarsounas manuscript: Early S-phase replication origin firing within topologically associating domain boundaries is defined by transcription
+> Data for Puig Lombardi & Tarsounas manuscript: Topologically associated domain boundaries restrict progression of replication forks initiating from early-firing origins
 
 ---
 
@@ -19,7 +19,7 @@
 
 ## CSV_files
 
-- These are the EdUseq-HU analysis outputs, files prepared using bwa-mem and the Perl scripts in the directory [Perl_scripts_Macheret-Halazonetis_2018](Perl_scripts_Macheret-Halazonetis_2018/)
+- These are the EdU-seq analysis outputs, files prepared using bwa-mem and the Perl scripts in the directory [Perl_scripts_Macheret-Halazonetis_2018](Perl_scripts_Macheret-Halazonetis_2018/)
 - Raw sequencing data can be found [here](https://www.ncbi.nlm.nih.gov/bioproject/PRJNA397123) for U2OS cells and [here](https://www.ncbi.nlm.nih.gov/geo/query/acc.cgi?acc=GSE153734) for H1299 cells
 - Reads must be aligned to the human **masked** genome (version: GRCh37/hg19), accessed from [here](http://hgdownload.soe.ucsc.edu/goldenPath/hg19/bigZips/)
 
@@ -64,7 +64,7 @@ Variables include (detailed in the plot_sigma_values_v1.pl Perl script):\
 
 - Raw sequencing data can be found [here](https://www.ncbi.nlm.nih.gov/bioproject/PRJNA397123)
 
-The early, mid and late S-phase REPLIseq reads were assigned to 10-Kb genomic bins.\
+The early, mid and late S-phase REPLI-seq reads were assigned to 10-Kb genomic bins.\
 The numbers of early, mid and late S-phase reads were compared for each genomic bin: if one fraction (E, M or L) accounted for more than 50% of the total reads for the bin, then that bin was assigned to the corresponding replication timing domain.\
 Samples can be processed as in the following example (the hg19.chrom.sizes file can be found in the [REPLIseq](REPLIseq/) folder):
 
@@ -225,7 +225,7 @@ plot(chr1[,4],pch=19,cex=0.2,col="grey",ylim=c(-6,6),ylab="RT",xaxt="n")
 
 ## SNSseq_origins
 
-- Raw SNSseq data can be found [here](https://www.ncbi.nlm.nih.gov/bioproject/PRJNA163241) for HeLa cells and [here](https://www.ncbi.nlm.nih.gov/bioproject/PRJNA257527) for non-replicating genomic DNA (LexoG0) in MCF7 cells
+- Raw SNS-seq data can be found [here](https://www.ncbi.nlm.nih.gov/bioproject/PRJNA163241) for HeLa cells and [here](https://www.ncbi.nlm.nih.gov/bioproject/PRJNA257527) for non-replicating genomic DNA (LexoG0) in MCF7 cells
 
 Peaks were called using the MACS2 *callpeak* function with the following parameters: *--gsize hs --bw 300 --qvalue 0.05 --mfold 5 50* and using *LexoG0* uniquely mapped reads (in triplicate) as a control.\
 Only origins detected in both HeLa SNS replicates were retained for further analyses: see the [intersection_HeLa_SNSseq.narrowPeak](SNSseq_origins/) file.
@@ -252,5 +252,5 @@ regioneR (≥v1.18.1)
 
 ## Perl_scripts_Macheret-Halazonetis_2018
 
-Perl scripts published with the first paper describing the EdUseq-HU assay ([Macheret & Halazonetis *Nature* 2018](https://www.nature.com/articles/nature25507)) for sequencing data analysis.\
+Perl scripts published with the first paper describing the EdU-seq assay ([Macheret & Halazonetis *Nature* 2018](https://www.nature.com/articles/nature25507)) for sequencing data analysis.\
 For more details, see [Macheret & Halazonetis *Nature* 2018](https://www.nature.com/articles/nature25507) and [Macheret & Halazonetis *Nature Protocols* 2019](https://www.nature.com/articles/s41596-018-0081-y).
