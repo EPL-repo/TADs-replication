@@ -1,6 +1,6 @@
 # TADs-replication
 
-> Data for Puig Lombardi & Tarsounas manuscript: Topologically associated domain boundaries restrict progression of replication forks initiating from early-firing origins
+> Data for Puig Lombardi & Tarsounas manuscript: Topologically associating domain boundaries are enriched in early firing origins and restrict outwards replication fork progression
 
 ---
 
